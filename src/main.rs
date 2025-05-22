@@ -1,5 +1,6 @@
 use game_life::cli::*;
 
 fn main() {
-    run_game();
+    let mut game = Game::create();
+    game.run_game();
 }
