@@ -1,8 +1,9 @@
+use rand::Rng;
 use std::sync::Arc;
 
 #[derive(Clone)]
 pub struct Board {
-    pub board: Vec<Vec<bool>>,
+    board: Vec<Vec<bool>>,
     rows: usize,
     columns: usize,
     born: Arc<Vec<usize>>,
@@ -30,6 +31,10 @@ impl Board {
             born: Arc::new(born),
             survive: Arc::new(surive),
         }
+    }
+
+    pub fn get_cell(&self, x: usize, y: usize) -> bool {
+        return self.board[x][y];
     }
 
     pub fn rows(&self) -> usize {
@@ -91,6 +96,18 @@ impl Board {
                     new_board[x][y] = true;
                 }
             }
+        }
+        self.next_board(new_board);
+    }
+
+    pub fn rand_board(&mut self, coefficient: f64) {
+        let mut new_board = vec![vec![false; self.rows]; self.columns];
+        let mut rng = rand::rng();
+
+        for _ in 0..(((self.rows * self.rows) as f64 * coefficient) as usize) {
+            let x = rng.random_range(0..self.rows);
+            let y = rng.random_range(0..self.columns);
+            new_board[x][y] = true;
         }
         self.next_board(new_board);
     }
