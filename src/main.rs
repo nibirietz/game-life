@@ -1,3 +1,5 @@
+use game_life::cli::*;
+
 fn main() {
-    println!("Hello, world!");
+    run_game();
 }

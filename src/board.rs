@@ -1,8 +1,8 @@
-use std::{iter::repeat_n, sync::Arc};
+use std::sync::Arc;
 
 #[derive(Clone)]
 pub struct Board {
-    board: Vec<Vec<bool>>,
+    pub board: Vec<Vec<bool>>,
     rows: usize,
     columns: usize,
     born: Arc<Vec<usize>>,
@@ -15,13 +15,14 @@ impl Board {
         let survive: Vec<usize> = vec![2, 3];
         Board::new_with_rules(rows, columns, born, survive)
     }
+
     pub fn new_with_rules(
         rows: usize,
         columns: usize,
         born: Vec<usize>,
         surive: Vec<usize>,
     ) -> Board {
-        let mut new_board: Vec<Vec<bool>> = vec![vec![false; rows]; columns];
+        let new_board: Vec<Vec<bool>> = vec![vec![false; rows]; columns];
         Board {
             board: new_board,
             rows: rows,
@@ -30,9 +31,19 @@ impl Board {
             survive: Arc::new(surive),
         }
     }
+
+    pub fn rows(&self) -> usize {
+        self.rows
+    }
+
+    pub fn columns(&self) -> usize {
+        self.columns
+    }
+
     pub fn cell_is_live(&self, x: usize, y: usize) -> bool {
         !(x >= self.rows || y >= self.columns) && self.board[x][y]
     }
+
     fn count_live_neighbours(self, x: usize, y: usize) -> usize {
         let x_1 = x.wrapping_sub(1);
         let y_1 = y.wrapping_sub(1);
@@ -48,16 +59,19 @@ impl Board {
         }
         count_neighbours
     }
-    pub fn next_board(&mut self, board: Vec<Vec<bool>>) {
+
+    fn next_board(&mut self, board: Vec<Vec<bool>>) {
         if board.len() == self.board.len() && board[0].len() == self.board[0].len() {
             self.board = board;
         }
     }
+
     pub fn toggle_cell(&mut self, x: usize, y: usize) {
         if x < self.rows && y < self.columns {
             self.board[x][y] = !self.board[x][y];
         }
     }
+
     pub fn simulate_board(&mut self) {
         let mut new_board: Vec<Vec<bool>> = vec![vec![false; self.rows]; self.columns];
         for x in 0..new_board.len() {
